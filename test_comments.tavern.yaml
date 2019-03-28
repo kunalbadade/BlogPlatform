@@ -1,0 +1,68 @@
+test_name: Add new comment to an article which does not exists
+
+stages:
+  - name: Make sure your comment does not get added
+    request:
+      url: http://localhost:5300/new_comment
+      json:
+        article_id: 1000
+        comment_content: Comment10
+      auth:
+        - adam
+        - john1
+      method: POST
+      headers:
+        content-type: application/json
+    response:
+      status_code: 409
+---
+
+test_name: Post an anonymous comment on an article
+
+stages:
+  - name: Create a comment with anonymous user
+    request:
+      url: http://localhost:5300/new_comment
+      json:
+        article_id: 2
+        comment_content: Comment10
+      method: POST
+      headers:
+        content-type: application/json
+    response:
+      status_code: 201
+---
+test_name: Post an authenticated comment on an article
+
+stages:
+  - name: Create a comment with an authenticated user
+    request:
+      url: http://localhost:5300/new_comment
+      json:
+        article_id: 2
+        comment_content: Comment20
+      auth:
+        - adam
+        - john1
+      method: POST
+      headers:
+        content-type: application/json
+    response:
+      status_code: 201
+test_name: Check that the comments in article are returned in chronological order
+
+stages:
+  - name: Make sure that the comments belonging to particular article are retrieved in chronological order
+    request:
+      url: http://localhost:5300/comments/getncomments/2
+      json:
+        n: 3
+      auth:
+        - adam
+        - john1
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+---

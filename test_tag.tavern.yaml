@@ -1,0 +1,84 @@
+
+test_name: Add another tag to the article
+
+stages:
+  - name: Add another tag to the article
+    request:
+      url: http://localhost:5100/new_tag/1
+      method: POST
+      json:
+        tags: ["tag40","tag41"]
+      auth:
+        - adam
+        - john1
+      headers:
+        content-type: application/json
+    response:
+      status_code: 201
+---
+
+test_name: List all articles with the new tag
+
+stages:
+  - name: List all articles with the new tag
+    request:
+      url: http://localhost:5100/get_articles_for_tag/1
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+---
+test_name: Delete one of the tags from the article
+
+stages:
+  - name: Delete one of the tags from the article
+    request:
+      url: http://localhost:5100/remove_tags/1
+      method: DELETE
+      auth:
+        - adam
+        - john1
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+---
+
+test_name: Add an article with a new tag
+
+stages:
+  - name: Add an article with a new tag
+    request:
+      url: http://localhost:5000/new_article
+      method: POST
+      json:
+        article_content: paragArticle
+        article_title: ParagTitle
+        tags: ["tag25","tag26"]
+      auth:
+        - adam
+        - john1
+      headers:
+        content-type: application/json
+    response:
+      status_code: 201
+
+---
+
+test_name: Add a tag to an article that doesn’t exist
+
+stages:
+  - name: Add a tag to an article that doesn’t exist
+    request:
+      url: http://localhost:5100/new_tag/1000
+      method: POST
+      json:
+        tags: ["tag121","tag131"]
+      auth:
+        - adam
+        - john1
+      headers:
+        content-type: application/json
+    response:
+      status_code: 409
